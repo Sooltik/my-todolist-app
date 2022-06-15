@@ -1,5 +1,6 @@
 <template>
   <v-app>
+    <!-- Header -->
     <v-app-bar
       app
       color="primary"
@@ -15,8 +16,6 @@
           gradient="to top right, rgba(19,84,122,.5), rgba(128,208,199,.8)"
         ></v-img>
       </template>
-
-      <v-app-bar-title>Todo List</v-app-bar-title>
 
       <v-spacer></v-spacer>
 
