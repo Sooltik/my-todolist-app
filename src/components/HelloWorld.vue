@@ -18,10 +18,10 @@
                     <v-list-item>
                         <template v-slot:default="{ active, }">
                             <v-list-item-action>
-                                <v-checkbox :input-value="active" color="primary"></v-checkbox>
+                                <v-checkbox :input-value="active" color="primary" @click="doneTask(task.id)"></v-checkbox>
                             </v-list-item-action>
                             <v-list-item-content>
-                                <v-list-item-title>{{ task.title }}</v-list-item-title>
+                                <v-list-item-title :class="{'text-decoration-line-through':task.done}">{{ task.title }}</v-list-item-title>
                             </v-list-item-content>
                         </template>
                     </v-list-item>
@@ -54,6 +54,10 @@ export default {
             }
             this.tasks.push(newTask);
             this.taskName = "";
+        },
+        doneTask(id) {
+            let task = this.tasks.filter(task => task.id === id)[0]
+            task.done = !task.done
         }
     }
 }
