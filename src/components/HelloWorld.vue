@@ -15,14 +15,26 @@
             <!-- List of tasks -->
             <div v-for="task in tasks" :key="task.id">
                 <v-list class="pt-0" flat>
-                    <v-list-item>
-                        <template v-slot:default="{ active, }">
+                    <v-list-item @click="doneTask(task.id)" :class="{ 'blue lighten-5': task.done }">
+                        <template v-slot:default>
+
+                            <!-- Checkbox -->
                             <v-list-item-action>
-                                <v-checkbox :input-value="active" color="primary" @click="doneTask(task.id)"></v-checkbox>
+                                <v-checkbox :input-value="task.done"></v-checkbox>
                             </v-list-item-action>
+
+                            <!-- Name of task -->
                             <v-list-item-content>
                                 <v-list-item-title :class="{'text-decoration-line-through':task.done}">{{ task.title }}</v-list-item-title>
                             </v-list-item-content>
+
+                            <!-- Button to delete -->
+                            <v-list-item-action>
+                                <v-btn>
+                                    <v-icon >mdi-delete</v-icon>
+                                </v-btn>
+                            </v-list-item-action>
+
                         </template>
                     </v-list-item>
                     <v-divider></v-divider>
