@@ -1,50 +1,83 @@
 <template>
-<v-container>
-    <v-row class="text-center">
-        <v-col class="mb-4">
+    <div
+      class="home"
+    >
+        <v-text-field
+          v-model="taskName"
+          @click:append="addTask"
+          @keyup.enter="addTask"
+          class="pa-3"
+          append-icon="mdi-plus"
+          label="Add Task"
+          clearable
+          hide-details
+          outlined
+        ></v-text-field>
 
-            <!-- Title -->
-            <h1 class="display-2 font-weight-bold ma-4">
-                My Todo List
-            </h1>
+        <v-list
+          v-if="tasks.length"
+          class="pt-0"
+          flat
+        >
+            <div
+              v-for="task in tasks"
+              :key="task.id"
+            >
+                <v-list-item
+                  :class="{ 'blue lighten-5': task.done }"
+                  @click="doneTask(task.id)"
+                >
+                    <template
+                      v-slot:default
+                    >
+                        <v-list-item-action>
+                           <v-checkbox
+                              :input-value="task.done"
+                              color="primary"></v-checkbox
+                            >
+                        </v-list-item-action>
 
-            <!-- Form Input Text Field -->
-            <v-text-field v-model="taskName" class="pa-3" outlined label="Add task" @click:append="addTask" @keyup.enter="addTask" append-icon="mdi-plus-box" clearable>
-            </v-text-field>
+                        <v-list-item-content>
+                            <v-list-item-title
+                              :class="{ 'text-decoration-line-through': task.done }"
+                            >
+                                {{ task.title }}
+                            </v-list-item-title>
+                        </v-list-item-content>
 
-            <!-- List of tasks -->
-            <div v-for="task in tasks" :key="task.id">
-                <v-list class="pt-0" flat>
-                    <v-list-item @click="doneTask(task.id)" :class="{ 'blue lighten-5': task.done }">
-                        <template v-slot:default>
+                        <v-list-item-action>
+                           <v-btn
+                              @click.stop="deleteTask(task.id)"
+                              icon
+                            >
+                                <v-icon
+                                  color="primary lighten-1">mdi-delete</v-icon
+                                >
+                            </v-btn>
+                        </v-list-item-action>
+                    </template>
 
-                            <!-- Checkbox -->
-                            <v-list-item-action>
-                                <v-checkbox :input-value="task.done"></v-checkbox>
-                            </v-list-item-action>
-
-                            <!-- Name of task -->
-                            <v-list-item-content>
-                                <v-list-item-title :class="{'text-decoration-line-through':task.done}">{{ task.title }}</v-list-item-title>
-                            </v-list-item-content>
-
-                            <!-- Button to delete -->
-                            <v-list-item-action>
-                                <v-btn icon @click.stop="deleteTask(task.id)">
-                                    <v-icon color="primary lighten-1">mdi-delete</v-icon>
-                                </v-btn>
-                            </v-list-item-action>
-
-                        </template>
-                    </v-list-item>
-                    <v-divider></v-divider>
-                </v-list>
+                </v-list-item>
+                <v-divider></v-divider>
             </div>
-
-        </v-col>
-    </v-row>
-</v-container>
+        </v-list>
+        <div
+          v-else
+          class="no-tasks"
+        >
+            <v-icon
+              color="primary"
+              size="100"
+            >
+                mdi-check
+            </v-icon>
+            <div
+              class="text-h5 primary--text"
+            >No tasks</div>
+        </div>
+    </div>
 </template>
+
 
 <script>
 export default {
@@ -73,7 +106,19 @@ export default {
         },
         deleteTask(id) {
             this.tasks = this.tasks.filter(task => task.id !== id)
+        },
+        editTask(id) {
+            console.log("You're editting " + id)
         }
     }
 }
 </script>
+
+<style lang="sass">
+.no-tasks
+    position: absolute
+    left: 50%
+    top: 50%
+    trasnform: translate(-50%, -50%)
+    opacity: 0.5
+</style>
