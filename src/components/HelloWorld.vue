@@ -9,7 +9,7 @@
             </h1>
 
             <!-- Form Input Text Field -->
-            <v-text-field v-model="taskName" class="pa-3" outlined label="Add task" @click:append="addTask" @keyup.enter="addTask" append-icon="mdi-plus-box">
+            <v-text-field v-model="taskName" class="pa-3" outlined label="Add task" @click:append="addTask" @keyup.enter="addTask" append-icon="mdi-plus-box" clearable>
             </v-text-field>
 
             <!-- List of tasks -->
@@ -30,8 +30,8 @@
 
                             <!-- Button to delete -->
                             <v-list-item-action>
-                                <v-btn>
-                                    <v-icon >mdi-delete</v-icon>
+                                <v-btn icon @click.stop="deleteTask(task.id)">
+                                    <v-icon color="primary lighten-1">mdi-delete</v-icon>
                                 </v-btn>
                             </v-list-item-action>
 
@@ -70,6 +70,9 @@ export default {
         doneTask(id) {
             let task = this.tasks.filter(task => task.id === id)[0]
             task.done = !task.done
+        },
+        deleteTask(id) {
+            this.tasks = this.tasks.filter(task => task.id !== id)
         }
     }
 }
