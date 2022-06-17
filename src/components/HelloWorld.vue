@@ -122,10 +122,14 @@
                       v-slot:action="{ attrs }"
                     >
                         <v-btn
-                        color="pink"
-                        text
-                        v-bind="attrs"
-                        @click="snackbar = false"
+                          v-bind="attrs"
+                          :value="true"
+                          @click="snackbar = false"
+                          color="primary lighten-1"
+                          rounded="pill"
+                          absolute
+                          right
+                          text
                         >
                         Close
                         </v-btn>
