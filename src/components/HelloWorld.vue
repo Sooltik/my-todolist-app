@@ -111,6 +111,28 @@
                     tasks</div>
             </div>
 
+            <!-- Snackbar -->
+            <div>
+                <v-snackbar
+                v-model="snackbar"
+                >
+                {{ text }}
+
+                    <template
+                      v-slot:action="{ attrs }"
+                    >
+                        <v-btn
+                        color="pink"
+                        text
+                        v-bind="attrs"
+                        @click="snackbar = false"
+                        >
+                        Close
+                        </v-btn>
+                    </template>
+                </v-snackbar>
+            </div>
+
         </div>
     </v-col>
 </v-row>
@@ -123,7 +145,9 @@ export default {
     data() {
         return {
             taskName: "",
-            tasks: []
+            tasks: [],
+            snackbar: false,
+            text: ``
         }
     },
 
@@ -134,20 +158,33 @@ export default {
                 name: this.taskName,
                 done: false
             }
-            this.tasks.push(newTask);
-            this.taskName = "";
+            this.tasks.push(newTask)
+            this.taskName = ""
+            this.snackbar = true
+            this.text = "Task Added"
         },
         doneTask(id) {
             let task = this.tasks.filter(task => task.id === id)[0]
             task.done = !task.done
+            this.snackbar = true
+            if(task.done){
+                this.text = "Task is Done"
+            }else{
+                this.text = "Task is not Done yet"
+            }
+            
         },
         deleteTask(id) {
             this.tasks = this.tasks.filter(task => task.id !== id)
+            this.snackbar = true
+            this.text = "Task is Deleted"
         },
         editTask(id) {     
             let task = this.tasks.filter(task => task.id === id)[0]
             this.taskName = task.name
             this.tasks = this.tasks.filter(task => task.id !== id)
+            this.snackbar = true
+            this.text = "Task is being Edited"
         }
     }
 }
