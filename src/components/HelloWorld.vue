@@ -25,7 +25,9 @@
               label="Add Task"
               clearable
               hide-details
-              outlined></v-text-field
+              outlined
+              shaped
+              ></v-text-field
             >
 
             <!-- List of Tasks -->
@@ -73,6 +75,23 @@
                                       color="primary lighten-1"
                                     >mdi-pencil</v-icon>
                                 </v-btn>
+                            </v-list-item-action>
+
+                            <!--Date of Task -->
+                            <v-list-item-action 
+                            v-if="task.datePicked">
+                              <v-list-item-action-text>
+                                <v-btn
+                                  @click.stop="displayDatePicked(task.id)"
+                                  icon
+                                  >
+                                  <v-icon
+                                  color="primary lighten-1"
+                                  >mdi-calendar
+                                  </v-icon>
+                                </v-btn>
+                                {{task.datePicked | niceDate}}
+                              </v-list-item-action-text>
                             </v-list-item-action>
 
                             <!-- Button to Delete -->
@@ -126,7 +145,6 @@
                           :value="true"
                           @click="snackbar = false"
                           color="primary lighten-1"
-                          rounded="pill"
                           absolute
                           right
                           text
@@ -137,6 +155,7 @@
                 </v-snackbar>
             </div>
 
+            <!-- Alert -->
             <div>
               <v-alert
                 :value="alert"
@@ -156,8 +175,14 @@
 </template>
 
 <script>
+import {format} from 'date-fns'
 export default {
     name: 'HelloWorld',
+    filters: {
+      niceDate(value){
+        return format(new Date(value), 'do MMM')
+      }
+    },
 
     data() {
         return {
@@ -165,7 +190,7 @@ export default {
             tasks: [],
             snackbar: false,
             text: ``,
-            alert : false
+            alert : false,
         }
     },
 
@@ -178,12 +203,13 @@ export default {
             let newTask = {
                 id: Date.now(),
                 name: this.taskName,
-                done: false
+                done: false,
+                datePicked: Date.now()
             }
             this.tasks.push(newTask)
-            this.taskName = ""
             this.snackbar = true
-            this.text = "Task Added"
+            this.text = this.taskName + " added"
+            this.taskName = ""
           }   
         },
         doneTask(id) {
@@ -191,23 +217,29 @@ export default {
             task.done = !task.done
             this.snackbar = true
             if(task.done){
-                this.text = "Task is Done"
+                this.text = task.name + " is done"
             }else{
-                this.text = "Task is not Done yet"
+                this.text = task.name + " is not done yet"
             }
             
         },
         deleteTask(id) {
+            let task = this.tasks.filter(task => task.id === id)[0]
             this.tasks = this.tasks.filter(task => task.id !== id)
             this.snackbar = true
-            this.text = "Task is Deleted"
+            this.text = task.name + " is deleted"
         },
         editTask(id) {     
             let task = this.tasks.filter(task => task.id === id)[0]
             this.taskName = task.name
             this.tasks = this.tasks.filter(task => task.id !== id)
             this.snackbar = true
-            this.text = "Task is being Edited"
+            this.text = task.name + " is being edited"
+        },
+        displayDatePicked(id){
+          this.snackbar = true
+          let task = this.tasks.filter(task => task.id === id)[0]
+          this.text = task.name + " was added on the " + format(new Date(task.datePicked), 'do MMM')
         }
     }
 }
