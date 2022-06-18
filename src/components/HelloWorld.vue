@@ -137,6 +137,19 @@
                 </v-snackbar>
             </div>
 
+            <div>
+              <v-alert
+                :value="alert"
+                color="red"
+                elevation="8"
+                icon="mdi-alert-circle"
+                prominent
+                type="warning"
+                dismissible
+                transition="fade-transition"
+              >Text field can not be empty</v-alert>
+            </div>
+
         </div>
     </v-col>
 </v-row>
@@ -151,12 +164,17 @@ export default {
             taskName: "",
             tasks: [],
             snackbar: false,
-            text: ``
+            text: ``,
+            alert : false
         }
     },
 
     methods: {
         addTask() {
+          if(this.taskName === ""){
+            this.alert = true
+            return false
+          }else{
             let newTask = {
                 id: Date.now(),
                 name: this.taskName,
@@ -166,6 +184,7 @@ export default {
             this.taskName = ""
             this.snackbar = true
             this.text = "Task Added"
+          }   
         },
         doneTask(id) {
             let task = this.tasks.filter(task => task.id === id)[0]
